@@ -16,14 +16,16 @@ enum BuildError {
 
 class BaseWindow {
 public:
-	HWND m_hWnd;
-	HWND m_fatherhWnd;
-	HINSTANCE m_hinstance;
-	int Error;
-
-	int style;
-	int x, y, width, height;
-	bool isfull;
+	HWND m_hWnd;				// 当前窗口句柄
+	HWND m_fatherhWnd;			// 父窗口句柄
+	HINSTANCE m_hinstance;		// 实例句柄
+	HMENU m_menu;				// 菜单句柄（子窗口ID）
+	int Error;					// 标准错误值
+	int style;					// 窗口风格
+	int x, y, width, height;	// 窗口区域
+	bool isfull;				// 全屏状态
+	wchar_t szTitle[32];		// 标题
+	wchar_t szWindowClass[16];	// 类名
 
 public:
 	BaseWindow();
@@ -46,13 +48,13 @@ private:
 };
 
 class WinBox : private BaseWindow {
-private:
-	std::thread* main_thread;
-	int status_mainThread;
-
 public:
 	// 构造
 	WinBox();
+
+	// 构造
+	// 父类句柄
+	WinBox(HWND fatherhWnd);
 
 	// 构造
 	// 实例句柄
@@ -63,20 +65,26 @@ public:
 
 	// 创建
 	// 全屏
-	void CreateFull();
+	void Create();
 
 	// 创建
-	// 位置和宽高度
+	// 位置、宽度、高度
 	void Create(int x, int y, int width, int height);
 
-	// 设置父窗口句柄
-	// 需要在Create之前调用
-	void setFatherhWnd(HWND hwnd);
+	// 创建
+	// 标题，类型，位置、宽度、高度
+	void Create(const wchar_t* _title, const wchar_t* _style, int x, int y, int width, int height);
 
-private:
 	// 循环消息处理
 	virtual void MessageControl();
 
+	// 返回句柄
+	virtual HWND GetHandle();
+
+	// 返回父类窗口句柄
+	virtual HWND GetFatherHandle();
+
+private:
 	// 回调函数
 	virtual LRESULT CALLBACK HandleProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 

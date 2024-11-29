@@ -10,12 +10,17 @@ BaseWindow::BaseWindow() {
     m_hWnd = nullptr;
     m_fatherhWnd = nullptr;
     m_hinstance = nullptr;
+    m_menu = nullptr;
     Error = BuildError_None;
     x = y = 0;
     width = GetSystemMetrics(SM_CXSCREEN);
     height = GetSystemMetrics(SM_CYSCREEN);
     style = WS_POPUP | WS_VISIBLE;
     isfull = true;
+
+    wsprintf(szTitle, L"Engine2D");
+    wsprintf(szWindowClass, L"Engine2D_%p", this);
+
 }
 
 // 构造
@@ -32,26 +37,27 @@ BaseWindow::~BaseWindow() {
 // 创建 - 基础参数
 void BaseWindow::Create() {
 
-    wchar_t szTitle[] = { L"Engine2D" };
-    wchar_t szWindowClass[] = { L"Engine2D" };
+    // 区分窗口类别
+    if (m_hinstance && !m_fatherhWnd) {
+        WNDCLASS wcex = { 0 };
+        wcex.style = CS_HREDRAW | CS_VREDRAW;
+        wcex.cbClsExtra = 0;
+        wcex.cbWndExtra = 0;
+        wcex.lpfnWndProc = WndProc;                         // 设置 窗口回调
+        wcex.hInstance = m_hinstance;                       // 设置 模块实例句柄
+        wcex.hIcon = LoadIcon(nullptr, IDI_APPLICATION);    // 设置 默认图标
+        wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);      // 设置 默认光标
+        wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);    // 设置 背景颜色
+        wcex.lpszMenuName = L"";                            // 设置 标题名
+        wcex.lpszClassName = szWindowClass;                 // 设置 类名
 
-    WNDCLASS wcex = { 0 };
-    wcex.style = CS_HREDRAW | CS_VREDRAW;
-    wcex.cbClsExtra = 0;
-    wcex.cbWndExtra = 0;
-    wcex.lpfnWndProc = WndProc;                         // 设置 窗口回调
-    wcex.hInstance = m_hinstance;                       // 设置 模块实例句柄
-    wcex.hIcon = LoadIcon(nullptr, IDI_APPLICATION);    // 设置 默认图标
-    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);      // 设置 默认光标
-    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);    // 设置 背景颜色
-    wcex.lpszMenuName = L"";                            // 设置 标题名
-    wcex.lpszClassName = szWindowClass;                 // 设置 类名
+        if (!RegisterClass(&wcex)) {
+            Error = BuildError_Register;
+            return;
+        }
 
-    if (!RegisterClass(&wcex)) {
-        Error = BuildError_Register;
-        return;
     }
-
+   
     // 创建窗口
     m_hWnd = CreateWindow(
         szWindowClass,  // 类名
@@ -62,7 +68,7 @@ void BaseWindow::Create() {
         width,
         height,
         m_fatherhWnd,   // 父窗口
-        nullptr,        // 菜单栏
+        m_menu,         // 菜单栏
         m_hinstance,    // 实例句柄
         (LPVOID)this);  // 额外创建参数
 
@@ -71,13 +77,15 @@ void BaseWindow::Create() {
         return;
     }
 
-    // 保存
-    SetWindowLongPtr(m_hWnd, GWLP_USERDATA, (LONG_PTR)this);
+    // 区分窗口类别
+    if (m_hinstance && !m_fatherhWnd) {
+        // 保存
+        SetWindowLongPtr(m_hWnd, GWLP_USERDATA, (LONG_PTR)this);
 
-    // 显示和更新
-    ShowWindow(m_hWnd, isfull ? SW_MAXIMIZE : SW_SHOW);
-    UpdateWindow(m_hWnd);
-
+        // 显示和更新
+        ShowWindow(m_hWnd, isfull ? SW_MAXIMIZE : SW_SHOW);
+        UpdateWindow(m_hWnd);
+    }
 }
 
 // 消息控制 - 死循环
@@ -125,16 +133,20 @@ LRESULT CALLBACK BaseWindow::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPA
 
 // 构造
 WinBox::WinBox() {
-    main_thread = nullptr;
-    status_mainThread = 0;
 
+
+}
+
+// 构造
+// 父类句柄
+WinBox::WinBox(HWND fatherhWnd) : WinBox() {
+    m_fatherhWnd = fatherhWnd;
 }
 
 // 构造
 // 实例句柄
 WinBox::WinBox(HINSTANCE hinstance) : WinBox() {
     m_hinstance = hinstance;
-
 }
 
 // 析构
@@ -144,74 +156,70 @@ WinBox::~WinBox() {
 
 // 创建
 // 全屏
-void WinBox::CreateFull() {
+void WinBox::Create() {
     // 空窗口
     if (!m_hWnd) {
         style = WS_POPUP | WS_VISIBLE;
-        if (!m_hinstance) {
-            style |= WS_CHILD;
+        if (m_fatherhWnd) {
+            style =  WS_VISIBLE | WS_CHILD;
         }
 
         // 创建
         BaseWindow::Create();
-
-        // 消息循环
-        // 主窗口不需要子线程
-        if (!m_hinstance && !main_thread) {
-            status_mainThread = 1;
-            main_thread = new std::thread([&]() {
-                BaseWindow::MessageControl();
-            });
-            main_thread->detach();
-        }
-        else {
-            MessageControl();
-        }
     }
 }
 
 // 创建
-// 位置和宽高度
+// 位置、宽度、高度
 void WinBox::Create(int x, int y, int width, int height) {
-
+    // 空窗口
     if(!m_hWnd){
         // 修正
         this->x = (x <= 0) ? 0 : x;
         this->y = (y <= 0) ? 0 : y;
         this->width = (width <= 0) ? 480 : width;
         this->height = (height <= 0) ? 320 : height;
-        style = WS_CAPTION | WS_SYSMENU | WS_VISIBLE;
+        style = WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE;
         isfull = false;
-        if (!m_hinstance) {
-            style |= WS_CHILD;
+        if (m_fatherhWnd) {
+            style =  WS_VISIBLE | WS_CHILD;
         }
 
         // 创建
         BaseWindow::Create();
-
-        // 消息循环
-        // 主窗口不需要子线程
-        if (!m_hinstance && !main_thread) {
-            status_mainThread = 1;
-            main_thread = new std::thread([&]() {
-                BaseWindow::MessageControl();
-            });
-            main_thread->detach();
-        }
-        else {
-            MessageControl();
-        }
     }
 }
 
-// 设置父窗口句柄
-void WinBox::setFatherhWnd(HWND hwnd) {
-    this->m_fatherhWnd = hwnd;
+// 创建
+// 标题，类型，位置、宽度、高度
+void WinBox::Create(const wchar_t* _title, const wchar_t* _style, int x, int y, int width, int height) {
+    
+    if (_title) {
+        wsprintf(szTitle, L"%s", _title);
+    }
+    
+    if (_style) {
+        wsprintf(szWindowClass, L"%s", _style);
+    }
+   
+    // 创建
+    Create(x, y, width, height);
+
 }
 
 // 循环消息处理
 void WinBox::MessageControl() {
     BaseWindow::MessageControl();
+}
+
+// 返回句柄
+HWND WinBox::GetHandle() {
+    return m_hWnd;
+}
+
+// 返回父类窗口句柄
+HWND WinBox::GetFatherHandle() {
+    return m_fatherhWnd;
 }
 
 // 回调函数
