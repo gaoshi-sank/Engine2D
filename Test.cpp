@@ -6,10 +6,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow) 
 {
-    BaseWindow* apptest = new BaseWindow(hInstance);
+    WinBox* apptest = new WinBox(hInstance);
     if (apptest) {
-        apptest->Create();
-        apptest->MessageControl();
+        apptest->Create(0, 0, 640, 480);
     }
 
     return 0;
