@@ -6,8 +6,8 @@
 
 
 #include "../Render/SpriteProvider.h"
+#include "../InputProvider.h"
 
-// 窗口类型
 enum WindowType {
 	WindowType_None = 0,
 	WindowType_Base,			// 基础
@@ -23,6 +23,7 @@ enum WindowType {
 	WindowType_Lable,			// Lable
 	WindowType_Plane,			// 面板
 };
+
 
 
 // 窗口类
@@ -42,8 +43,8 @@ public:
 	bool window_mouse;				// 鼠标事件 
 	bool window_allowacyive;		// 状态更新 - 允许激活事件
 	int window_renderlevel;			// 窗口渲染等级
-	RECT  window_rect;				// 窗口区域
-	POINT cursor_pos;				// 鼠标位置
+	D2D1_RECT_F  window_rect;		// 窗口区域
+	D2D1_POINT_2F cursor_pos;		// 鼠标位置
 	bool window_inrect;				// 光标状态 - 窗口内
 
 
@@ -62,9 +63,6 @@ public:
 	// 释放
 	virtual void Release() = 0;
 
-	// 更新事件
-	virtual void CheckEvent(int* param) = 0;
-
 	// 更新 
 	virtual void Update() = 0;
 
@@ -73,15 +71,16 @@ public:
 
 public:
 	// 设置窗口区域
-	virtual void MoveWindow(RECT _rect) = 0;
+	virtual void MoveWindow(D2D1_RECT_F _rect) = 0;
 
 	// 设置可见性
 	virtual void SetVisiable(bool life = true) = 0;
 
 	// 设置父级窗口编号
-	virtual void SetFather(unsigned int _father);
+	virtual void SetBaseWindow(unsigned int _father);
 	
-
+	// 判断是否为父级窗口
+	virtual bool IsBaseWindow();
 
 };
 

@@ -4,10 +4,9 @@
 #ifndef _RenderProvider_H_
 #define _RenderProvider_H_
 
-// 包含库
-#include "EngineConfig.h"					// 基础配置文件
-#include "EngineRenderConfig.h"				// 渲染模块配置文件
-#include "EngineFunction.h"					// 辅助函数文件
+#include "EngineConfig.h"
+#include "EngineFunction.h"
+#include "EngineRenderConfig.h"
 
 
 // 2.5D旋转矩阵

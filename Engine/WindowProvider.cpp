@@ -1,4 +1,4 @@
-#include "WinBox.h"
+#include "WindowProvider.h"
 
 
 // ----------------------------------------------------------------------------
@@ -127,35 +127,35 @@ LRESULT CALLBACK BaseWindow::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPA
 
 
 // ----------------------------------------------------------------------------
-// WinBox
+// WindowProvider
 // ----------------------------------------------------------------------------
 
 // 构造
-WinBox::WinBox() {
+WindowProvider::WindowProvider() {
 
 
 }
 
 // 构造
 // 父类句柄
-WinBox::WinBox(HWND fatherhWnd) : WinBox() {
+WindowProvider::WindowProvider(HWND fatherhWnd) : WindowProvider() {
     m_fatherhWnd = fatherhWnd;
 }
 
 // 构造
 // 实例句柄
-WinBox::WinBox(HINSTANCE hinstance) : WinBox() {
+WindowProvider::WindowProvider(HINSTANCE hinstance) : WindowProvider() {
     m_hinstance = hinstance;
 }
 
 // 析构
-WinBox::~WinBox() {
+WindowProvider::~WindowProvider() {
 
 }
 
 // 创建
 // 全屏
-void WinBox::Create() {
+void WindowProvider::Create() {
     // 空窗口
     if (!m_hWnd) {
         style = WS_POPUP | WS_VISIBLE;
@@ -170,7 +170,7 @@ void WinBox::Create() {
 
 // 创建
 // 位置、宽度、高度
-void WinBox::Create(int x, int y, int width, int height) {
+void WindowProvider::Create(int x, int y, int width, int height) {
     // 空窗口
     if(!m_hWnd){
         // 修正
@@ -191,7 +191,7 @@ void WinBox::Create(int x, int y, int width, int height) {
 
 // 创建
 // 标题，类型，位置、宽度、高度
-void WinBox::Create(const wchar_t* _title, const wchar_t* _style, int x, int y, int width, int height) {
+void WindowProvider::Create(const wchar_t* _title, const wchar_t* _style, int x, int y, int width, int height) {
     
     if (_title) {
         wsprintf(szTitle, L"%s", _title);
@@ -207,21 +207,21 @@ void WinBox::Create(const wchar_t* _title, const wchar_t* _style, int x, int y, 
 }
 
 // 循环消息处理
-void WinBox::MessageControl() {
+void WindowProvider::MessageControl() {
     BaseWindow::MessageControl();
 }
 
 // 返回句柄
-HWND WinBox::GetHandle() {
+HWND WindowProvider::GetHandle() {
     return m_hWnd;
 }
 
 // 返回父类窗口句柄
-HWND WinBox::GetFatherHandle() {
+HWND WindowProvider::GetFatherHandle() {
     return m_fatherhWnd;
 }
 
 // 回调函数
-LRESULT CALLBACK WinBox::HandleProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK WindowProvider::HandleProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
     return BaseWindow::HandleProc(hwnd, message, wParam, lParam);
 }

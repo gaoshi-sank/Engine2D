@@ -29,9 +29,6 @@ public:
 	// 创建
 	virtual bool Create(D2D1_RECT_F _rect);
 
-	// 更新事件
-	virtual void CheckEvent(int* param);
-
 	// 释放
 	virtual void Release();
 

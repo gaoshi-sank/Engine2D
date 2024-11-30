@@ -14,12 +14,7 @@ SpriteProvider::~SpriteProvider() {
 // 创建精灵
 // 参数 - 图像路径
 // 其他 绘制区域，裁剪区域，不透明度，旋转角度
-Sprite_Image* SpriteProvider::CreateImage(const char* filename, RECT draw_rect, RECT src_rect, float opacity, float angle) {
-	// Window 切换 Direct2D
-	auto _rect = D2D1::RectF((float)draw_rect.left, (float)draw_rect.top, (float)draw_rect.right, (float)draw_rect.bottom);
-	auto _src_rect = D2D1::RectF((float)src_rect.left, (float)src_rect.top, (float)src_rect.right, (float)src_rect.bottom);
-
-	// 申请
+Sprite_Image* SpriteProvider::CreateImage(const char* filename, D2D1_RECT_F _rect, D2D1_RECT_F _src_rect, float opacity, float angle) {
 	Sprite_Image* resultsprite = new Sprite_Image();
 	if (resultsprite) {
 		// 获取图像
@@ -56,27 +51,18 @@ Sprite_Image* SpriteProvider::CreateImage(const char* filename, RECT draw_rect, 
 // 创建文本精灵
 // 参数 - 文本
 // 其他 绘制区域，文本颜色
-Sprite_Text* SpriteProvider::CreateText(const char* text, RECT draw_rect, COLOR _color) {
-	// Window 切换 Direct2D
-	auto _rect = D2D1::RectF((float)draw_rect.left, (float)draw_rect.top, (float)draw_rect.right, (float)draw_rect.bottom);
-	auto color = D2D1::ColorF((float)_color.red, (float)_color.green, (float)_color.blue);
-
-	// 申请
+Sprite_Text* SpriteProvider::CreateText(const char* text, D2D1_RECT_F rect, D2D1_COLOR_F color) {
 	Sprite_Text* resultsprite = new Sprite_Text();
 	if (resultsprite) {
 		resultsprite->ReSetText(text);
-		resultsprite->ReSetRect(_rect);
+		resultsprite->ReSetRect(rect);
 		resultsprite->ReSetColor(color);
 	}
 	return resultsprite;
 }
 
 // 创建图形精灵
-Sprite_Figure* SpriteProvider::CreateFigure(COLOR _color, float line_size) {
-	// Window 切换 Direct2D
-	auto color = D2D1::ColorF((float)_color.red, (float)_color.green, (float)_color.blue);
-
-	// 申请
+Sprite_Figure* SpriteProvider::CreateFigure(D2D1_COLOR_F color, float line_size) {
 	Sprite_Figure* resultsprite = new Sprite_Figure();
 	if (resultsprite) {
 		resultsprite->ReSetColor(color);
@@ -86,11 +72,7 @@ Sprite_Figure* SpriteProvider::CreateFigure(COLOR _color, float line_size) {
 }
 
 // 创建线条精灵
-Sprite_Line* SpriteProvider::CreateLine(COLOR _color, float line_size) {
-	// Window 切换 Direct2D
-	auto color = D2D1::ColorF((float)_color.red, (float)_color.green, (float)_color.blue);
-
-	// 申请
+Sprite_Line* SpriteProvider::CreateLine(D2D1_COLOR_F color, float line_size) {
 	Sprite_Line* resultsprite = new Sprite_Line();
 	if (resultsprite) {
 		resultsprite->ResetLineColor(color);
@@ -99,11 +81,7 @@ Sprite_Line* SpriteProvider::CreateLine(COLOR _color, float line_size) {
 }
 
 // 创建动画精灵 - 单图创建
-Animation* SpriteProvider::CreateAnimation(const char* filename, int style, float timeline, RECT draw_rect, float opacity, float angle) {
-	// Window 切换 Direct2D
-	auto _rect = D2D1::RectF((float)draw_rect.left, (float)draw_rect.top, (float)draw_rect.right, (float)draw_rect.bottom);
-
-	// 申请
+Animation* SpriteProvider::CreateAnimation(const char* filename, int style, float timeline, D2D1_RECT_F rect, D2D1_RECT_F _src_rect, float opacity, float angle) {
 	Animation* result = new Animation();
 	if (result) {
 		ID2D1Bitmap* main_image = RenderProvider::CreateImage(filename);
@@ -131,7 +109,7 @@ Animation* SpriteProvider::CreateAnimation(const char* filename, int style, floa
 				ID2D1Bitmap* newimage = RenderProvider::CopyImage(main_image, D2D1::SizeU((UINT32)width, (UINT32)height), src_rect);
 				if (newimage && frame) {
 					frame->image = newimage;
-					frame->rect = _rect;
+					frame->rect = rect;
 					frame->src_rect = D2D1::RectF(0, 0, newimage->GetSize().width, newimage->GetSize().height);
 					frame->opacity = opacity;
 					frame->angle = angle;

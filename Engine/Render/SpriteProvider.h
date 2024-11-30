@@ -1,5 +1,5 @@
 ﻿/*
-	精灵提供类
+	精灵类
 */
 #ifndef _SpriteProvider_H_
 #define _SpriteProvider_H_
@@ -11,37 +11,10 @@
 #include "Sprite_Figure.h"
 #include "Animation.h"
 
-// 动画风格 - 枚举
 enum AniamtionStyle {
 	AniamtionStyle_Row4 = 1,
 	AniamtionStyle_Row8,
 	AniamtionStyle_Row16,
-};
-
-// 自定义颜色结构体
-struct COLOR {
-	unsigned char red;
-	unsigned char green;
-	unsigned char blue;
-
-	COLOR(){
-		red = 0;
-		green = 0;
-		blue = 0;
-	}
-	COLOR(unsigned char r, unsigned char g, unsigned char b) {
-		red = r;
-		green = g;
-		blue = b;
-	}
-	COLOR(const COLOR& _color) {
-		if (this != &_color) {
-			this->red = _color.red;
-			this->green = _color.green;
-			this->blue = _color.blue;
-		}
-	}
-	~COLOR(){}
 };
 
 // 绘制类 - 基础
@@ -55,19 +28,19 @@ private:
 
 public:
 	// 创建图像精灵
-	static Sprite_Image* CreateImage(const char* filename, RECT draw_rect = { 0 }, RECT src_rect = { 0 }, float opacity = 1.0f, float angle = 0.0f);
+	static Sprite_Image* CreateImage(const char* filename, D2D1_RECT_F rect = D2D1::RectF(), D2D1_RECT_F src_rect = D2D1::RectF(), float opacity = 1.0f, float angle = 0.0f);
 
 	// 创建文本精灵
-	static Sprite_Text* CreateText(const char* text, RECT draw_rect = { 0 }, COLOR color = { 0,0,0 });
+	static Sprite_Text* CreateText(const char* text, D2D1_RECT_F rect = D2D1::RectF(), D2D1_COLOR_F color = D2D1::ColorF(0, 0, 0));
 
 	// 创建图形精灵
-	static Sprite_Figure* CreateFigure(COLOR color, float line_size);
+	static Sprite_Figure* CreateFigure(D2D1_COLOR_F color, float line_size);
 
 	// 创建线条精灵
-	static Sprite_Line* CreateLine(COLOR color, float line_size);
+	static Sprite_Line* CreateLine(D2D1_COLOR_F color, float line_size);
 
 	// 创建动画精灵 - 单图创建
-	static Animation* CreateAnimation(const char* filename, int style, float timeline = 0.0f, RECT draw_rect = { 0 }, float opacity = 1.0f, float angle = 0.0f);
+	static Animation* CreateAnimation(const char* filename, int style, float timeline = 0.0f, D2D1_RECT_F rect = D2D1::RectF(), D2D1_RECT_F _src_rect = D2D1::RectF(), float opacity = 1.0f, float angle = 0.0f);
 };
 
 

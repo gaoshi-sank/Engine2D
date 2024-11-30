@@ -57,9 +57,6 @@ public:
 	// 设置可见性
 	virtual void SetVisiable(bool life = true);
 
-	// 更新事件
-	virtual void CheckEvent(int* param);
-
 	// 更新 
 	virtual void Update();
 

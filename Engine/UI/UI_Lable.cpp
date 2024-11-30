@@ -50,11 +50,6 @@ void UI_Lable::Release() {
 	UI_Window::Release();
 }
 
-// 更新事件
-void UI_Lable::CheckEvent(int* param) {
-
-}
-
 // 更新
 void UI_Lable::Update() {
 

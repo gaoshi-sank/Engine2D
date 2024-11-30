@@ -59,63 +59,51 @@ void UI_Button::Release() {
 	UI_Window::Release();
 }
 
-// 更新事件
-void UI_Button::CheckEvent(int* param) {
-	UI_Window::CheckEvent(param);
-
-	if (!param) {
-		return;
-	}
-
-	int paramlen = param[0];
-	if (paramlen < 2) {
-		return;
-	}
-
-	int message = param[1];
-	switch (message) {
-	case WM_LBUTTONDOWN:
-	{
-		// 在范围内
-		if (window_inrect) {
-			// 不是全局状态
-			if (button_click[0] == 0) {
-				// 触发点击
-				button_click[1] = 1;
-			}
-		}
-		// 范围外
-		else {
-			button_click[0] = 1;
-			button_click[1] = 0;
-		}
-	}
-		break;
-	case WM_LBUTTONUP:
-	{
-		// 在范围内 - 且点击过
-		if (window_inrect && button_click[1] == 1) {
-			// 触发按钮点击
-			if (this->callback_buttonclick) {
-				this->callback_buttonclick(this->window_id);
-			}
-		}
-
-		button_click[0] = 0;
-		button_click[1] = 0;
-	}
-		break;
-	default:
-		break;
-	}
-}
-
 // 更新 
 void UI_Button::Update() {
 	UI_Window::Update();
 
 	// 非释放状态
 	if (!window_release && window_active) {
+		int ret_leftdown = false;
+		auto input = InputProvider::GetInstance();
+		if (input) {
+			ret_leftdown = input->GetMouseStatus(MOUSESTATUS_LEFT);
+		}
+
+		// 左键按下
+		if (ret_leftdown == DOWN) {
+			// 在范围内
+			if (window_inrect) {
+				// 不是全局状态
+				if (button_click[0] == 0) {
+					// 触发点击
+					button_click[1] = 1;
+				}
+			}
+			// 范围外
+			else {
+				button_click[0] = 1;
+				button_click[1] = 0;
+			}
+		}
+		// 左键放开
+		else if (ret_leftdown == UP){
+			// 在范围内 - 且点击过
+			if (window_inrect && button_click[1] == 1) {
+				// 触发按钮点击
+				if (this->callback_buttonclick) {
+					this->callback_buttonclick(this->window_id);
+					if (this->window_release) {
+						return;
+					}
+				}
+			}
+
+			button_click[0] = 0;
+			button_click[1] = 0;
+		}
+
 		// 更新状态
 		if (window_inrect) {
 			if (button_click[1] == 1) {
@@ -205,7 +193,7 @@ void UI_Button::SetButtonImage(int type, const char* filename) {
 
 			// 重设
 			for (auto i = 0; i < buttonsize_button && !buttons[i]; i++) {
-				RECT src_rect = RECT{ width * i, 0, width * (i + 1), height };
+				D2D1_RECT_F src_rect = D2D1::RectF(width * i, 0, width * (i + 1), height);
 				buttons[i] = SpriteProvider::CreateImage(filename, window_rect, src_rect);
 			}
 

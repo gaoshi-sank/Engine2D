@@ -4,11 +4,9 @@
 #ifndef _UIProvider_H_
 #define _UIProvider_H_
 
-#include "EngineConfig.h"
-#include "EngineFunction.h"
-#include "UI/UI_Window.h"
 
-/*
+// °üº¬¿â
+#include "UI/UI_Window.h"
 #include "UI/UI_Static.h"
 #include "UI/UI_Button.h"
 #include "UI/UI_SingleButton.h"
@@ -17,7 +15,6 @@
 #include "UI/UI_List.h"
 #include "UI/UI_GIF.h"
 #include "UI/UI_Lable.h"
-*/
 
 // 
 class UIProvider {
@@ -40,7 +37,7 @@ private:
 
 public:
 	// ³õÊ¼»¯
-	static void InitUIManager();
+	static void InitUIProvider();
 
 	// ÊÍ·Å
 	static void Release();
@@ -58,7 +55,7 @@ public:
 	static void Draw();
 
 	// ÅÐ¶Ï¶¥²ã
-	static bool GetLevelTop(UI_Window* _ui, POINT pos);
+	static bool GetLevelTop(D2D1_POINT_2F pos, UI_Window* other);
 };
 
 #endif //!_UIProvider_H_ 

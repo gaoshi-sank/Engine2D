@@ -38,11 +38,6 @@ bool UI_List::Create(D2D1_RECT_F _rect) {
 	return Create();
 }
 
-// 更新事件
-void UI_List::CheckEvent(int* param) {
-
-}
-
 // 释放
 void UI_List::Release() {
 

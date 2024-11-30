@@ -41,11 +41,6 @@ void UI_Static::Release() {
 	UI_Window::Release();
 }
 
-// 更新事件
-void UI_Static::CheckEvent(int* param) {
-
-}
-
 // 更新
 void UI_Static::Update() {
 	UI_Window::Update();

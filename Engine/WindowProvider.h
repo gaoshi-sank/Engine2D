@@ -1,12 +1,8 @@
-#ifndef _WinBox_h_
-#define _WinBox_h_
+#ifndef _WindowProvider_h_
+#define _WindowProvider_h_
 
-#include <Windows.h>
-#include <iostream>
-#include <vector>
-#include <thread>
-
-using namespace std;
+// 包含库
+#include "EngineConfig.h"
 
 enum BuildError {
 	BuildError_None = 0,
@@ -14,6 +10,7 @@ enum BuildError {
 	BuildError_BuildhWnd,
 };
 
+// 
 class BaseWindow {
 public:
 	HWND m_hWnd;				// 当前窗口句柄
@@ -47,21 +44,22 @@ private:
 
 };
 
-class WinBox : private BaseWindow {
+// 
+class WindowProvider : private BaseWindow {
 public:
 	// 构造
-	WinBox();
+	WindowProvider();
 
 	// 构造
 	// 父类句柄
-	WinBox(HWND fatherhWnd);
+	WindowProvider(HWND fatherhWnd);
 
 	// 构造
 	// 实例句柄
-	WinBox(HINSTANCE hinstance);
+	WindowProvider(HINSTANCE hinstance);
 
 	// 析构
-	~WinBox();
+	~WindowProvider();
 
 	// 创建
 	// 全屏
@@ -90,4 +88,4 @@ private:
 
 };
 
-#endif //!_WinBox_h_
+#endif //!_WindowProvider_h_

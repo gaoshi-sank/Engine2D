@@ -1,5 +1,5 @@
 #include "UIProvider.h"
-
+#include "WindowProvider.h"
 
 // 变量列表
 UIProvider* g_ui = nullptr;
@@ -15,7 +15,7 @@ UIProvider::~UIProvider() {
 }
 
 // 初始化
-void UIProvider::InitUIManager() {
+void UIProvider::InitUIProvider() {
 	if (!g_ui) {
 		g_ui = new UIProvider();
 	}
@@ -142,7 +142,7 @@ void UIProvider::Draw() {
 }
 
 // 可更新选项 
-bool UIProvider::GetLevelTop(UI_Window* _ui, POINT pos) {
+bool UIProvider::GetLevelTop(D2D1_POINT_2F pos, UI_Window* other) {
 	if (g_ui) {
 		// 获取可见-可用UI控件
 		vector<UI_Window*> alltop;
@@ -172,7 +172,7 @@ bool UIProvider::GetLevelTop(UI_Window* _ui, POINT pos) {
 			// 直接比较最大值 
 			UI_Window*& maxlevel = alltop[0];
 			if (maxlevel != nullptr) {
-				if (_ui->window_renderlevel >= maxlevel->window_renderlevel) {
+				if (other->window_renderlevel >= maxlevel->window_renderlevel) {
 					return true;
 				}
 			}

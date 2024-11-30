@@ -5,10 +5,10 @@ RenderProvider* g_render = nullptr;
 
 // 构造
 RenderProvider::RenderProvider(){
-	this->factory = nullptr;				// 渲染工厂
-	this->render_target = nullptr;			// 画刷
-	this->WicFactory = nullptr;			// WIC
-	this->textfactory = nullptr;			// 文字工厂
+	this->factory = NULL;				// 渲染工厂
+	this->render_target = NULL;			// 画刷
+	this->WicFactory = NULL;			// WIC
+	this->textfactory = NULL;			// 文字工厂
 
 }
 
@@ -200,7 +200,7 @@ IWICBitmap* RenderProvider::GetD2Wic(LPCWSTR filename, int index) {
 	IWICBitmap* wic_bitmap = nullptr;
 	WICRect rcLock = { 0, 0, 0, 0 };
 	UINT nwidth = 0, nheight = 0;
-	IWICBitmapLock* pLock = nullptr;
+	IWICBitmapLock* pLock = NULL;
 	HRESULT hr = S_OK;
 
 	if (this->WicFactory != nullptr) {
@@ -222,7 +222,7 @@ IWICBitmap* RenderProvider::GetD2Wic(LPCWSTR filename, int index) {
 					if (SUCCEEDED(hr)) {
 						UINT cbBufferSize = 0;
 						UINT cbStride = 0;
-						BYTE* pv = nullptr;
+						BYTE* pv = NULL;
 
 						// Retrieve the stride.
 						hr = pLock->GetStride(&cbStride);
@@ -439,7 +439,7 @@ buildip3:
 // 初始化渲染资源
 bool RenderProvider::InitRender(HWND hwnd, D2D1_SIZE_U size) {
 	// 句柄为空
-	if (hwnd == nullptr) {
+	if (hwnd == NULL) {
 		return false;
 	}
 
@@ -447,7 +447,7 @@ bool RenderProvider::InitRender(HWND hwnd, D2D1_SIZE_U size) {
 	HRESULT hr = S_OK;
 
 	// COM组件初始化
-	hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+	hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	hr = CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, __uuidof(this->WicFactory), (LPVOID*)&(this->WicFactory));
 	if (FAILED(hr)) {
 		return false;
