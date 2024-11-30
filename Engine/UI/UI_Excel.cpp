@@ -126,6 +126,13 @@ void UI_Excel::SetVisiable(bool life) {
 	}
 }
 
+// 更新事件
+void UI_Excel::CheckEvent(int* param) {
+	UI_Window::CheckEvent(param);
+
+
+}
+
 // 更新 
 void UI_Excel::Update() {
 	UI_Window::Update();

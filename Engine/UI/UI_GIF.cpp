@@ -48,6 +48,11 @@ void UI_GIF::Release() {
 	UI_Window::Release();
 }
 
+// 更新事件
+void UI_GIF::CheckEvent(int* param) {
+	UI_Window::CheckEvent(param);
+}
+
 // 更新
 void UI_GIF::Update() {
 	UI_Window::Update();

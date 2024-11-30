@@ -49,29 +49,44 @@ void UI_Window::Release() {
 	this->window_release = true;
 }
 
-// 更新 
-void UI_Window::Update() {
-	auto input = InputProvider::GetInstance();
-	if (input) {
-		int x = -1, y = -1;
-		input->GetMousePos(x, y);
-		if (x != -1 && y != -1) {
-			cursor_pos.x = (float)x;
-			cursor_pos.y = (float)y;
-
-			// 判定顶层
-			window_inrect = false;
-			auto ret_top = UIProvider::GetLevelTop(cursor_pos, this);
-
-			// 顶层 -- 可见状态
-			if (ret_top && window_visible) {
-				if (Point_In_Rect(cursor_pos, window_rect)) {
-					window_inrect = true;
-				}
-			}
-		}
+// 更新事件
+void UI_Window::CheckEvent(int* param){
+	if (!param) {
+		return;
 	}
 
+	int paramlen = param[0];
+	if (paramlen < 2) {
+		return;
+	}
+
+	int message = param[1];
+	switch (message) {
+	case WM_MOUSEMOVE:
+	{
+		if (paramlen >= 4) {
+			cursor_pos.x = param[2];
+			cursor_pos.y = param[3];
+		}
+	}
+		break;
+	default:
+		break;
+	}
+}
+
+// 更新 
+void UI_Window::Update() {
+	// 判定顶层
+	window_inrect = false;
+	auto ret_top = UIProvider::GetLevelTop(cursor_pos, this);
+
+	// 顶层 -- 可见状态
+	if (ret_top && window_visible) {
+		if (Point_In_Rect(cursor_pos, window_rect)) {
+			window_inrect = true;
+		}
+	}
 }
 
 // 绘制 

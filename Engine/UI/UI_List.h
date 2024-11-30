@@ -32,6 +32,9 @@ public:
 	// 释放
 	virtual void Release();
 
+	// 更新事件
+	virtual void CheckEvent(int* param);
+
 	// 更新 
 	virtual void Update();
 

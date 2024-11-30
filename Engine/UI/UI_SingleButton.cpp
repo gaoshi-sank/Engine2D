@@ -57,6 +57,11 @@ void UI_SingleButton::Release() {
 	UI_Window::Release();
 }
 
+// 更新事件
+void UI_SingleButton::CheckEvent(int* param) {
+	UI_Window::CheckEvent(param);
+}
+
 // 更新 
 void UI_SingleButton::Update() {
 	UI_Window::Update();

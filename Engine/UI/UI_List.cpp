@@ -62,6 +62,11 @@ void UI_List::Release() {
 	UI_Window::Release();
 }
 
+// 更新事件
+void UI_List::CheckEvent(int* param) {
+	UI_Window::CheckEvent(param);
+}
+
 // 更新 
 void UI_List::Update() {
 	UI_Window::Update();

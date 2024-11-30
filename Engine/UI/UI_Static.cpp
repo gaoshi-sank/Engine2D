@@ -29,6 +29,11 @@ bool UI_Static::Create(std::string _name, D2D1_RECT_F _rect) {
 	return Create();
 }
 
+// 更新事件
+void UI_Static::CheckEvent(int* param) {
+	UI_Window::CheckEvent(param);
+}
+
 // 释放
 void UI_Static::Release() {
 	// 文本 

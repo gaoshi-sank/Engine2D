@@ -48,6 +48,10 @@ void UI_Roll::Release() {
 	UI_Window::Release();
 }
 
+// 更新事件
+void UI_Roll::CheckEvent(int* param) {
+	UI_Window::CheckEvent(param);
+}
 
 // 更新 
 void UI_Roll::Update() {
