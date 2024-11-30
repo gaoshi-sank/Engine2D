@@ -55,7 +55,6 @@ void BaseWindow::Create() {
             Error = BuildError_Register;
             return;
         }
-
     }
    
     // ´´½¨´°¿Ú
